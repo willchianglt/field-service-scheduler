@@ -33,7 +33,7 @@ GMAIL_APP_PASSWORD = st.secrets.get("GMAIL_APP_PASSWORD", os.getenv("GMAIL_APP_P
 # Configure Gemini
 if GEMINI_API_KEY:
     genai.configure(api_key=GEMINI_API_KEY)
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    model = genai.GenerativeModel('models/gemini-1.5-flash')
 else:
     st.error("⚠️ Gemini API Key not found. Please set it in Streamlit secrets.")
 
@@ -145,26 +145,18 @@ Important:
     return system_prompt
 
 def chat_with_gemini(message, chat_history, system_prompt):
-    """Send message to Gemini and get response"""
+    """Send message to Gemini using the stable chat session method"""
     try:
-        # Combine system prompt with chat history
-        full_prompt = system_prompt + "\n\nConversation history:\n"
-        
-        for entry in chat_history:
-            role = entry['role']
-            content = entry['content']
-            full_prompt += f"{role}: {content}\n"
-        
-        full_prompt += f"Customer: {message}\nAssistant:"
-        
-        # Generate response
-        response = model.generate_content(full_prompt)
-        
+        # Create a new chat session with the system prompt instructions
+        chat = model.start_chat(history=[])
+        # Send the system prompt first (invisible to user) to set the rules
+        chat.send_message(system_prompt)
+        # Send the actual user message
+        response = chat.send_message(message)
         return response.text
-        
     except Exception as e:
-        return f"Sorry, I encountered an error: {e}"
-
+        return f"Model Error: {e}. Try checking your API key permissions in Google AI Studio."
+        
 def parse_reschedule_request(response_text):
     """Parse reschedule request from Gemini response"""
     if "RESCHEDULE_REQUEST:" in response_text:
