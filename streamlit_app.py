@@ -35,8 +35,13 @@ if GEMINI_API_KEY:
     import google.generativeai.types as types
     genai.configure(api_key=GEMINI_API_KEY)
     
-    # This explicit model naming usually bypasses the v1beta 404 error
-    model = genai.GenerativeModel(model_name="gemini-3-flash-preview")
+    # We add generation_config here to speed things up
+    model = genai.GenerativeModel(
+        model_name="gemini-3-flash-preview",
+        generation_config={
+            "thinking_config": {"thinking_level": "MINIMAL"}
+        }
+    )
 else:
     st.error("⚠️ Gemini API Key not found. Please set it in Streamlit secrets.")
 
