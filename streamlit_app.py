@@ -37,7 +37,6 @@ if GEMINI_API_KEY:
     
     # This explicit model naming usually bypasses the v1beta 404 error
     model = genai.GenerativeModel(model_name="gemini-3-flash-preview")
-    )
 else:
     st.error("⚠️ Gemini API Key not found. Please set it in Streamlit secrets.")
 
