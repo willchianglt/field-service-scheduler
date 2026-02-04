@@ -33,7 +33,7 @@ GMAIL_APP_PASSWORD = st.secrets.get("GMAIL_APP_PASSWORD", os.getenv("GMAIL_APP_P
 # Configure Gemini
 if GEMINI_API_KEY:
     genai.configure(api_key=GEMINI_API_KEY)
-    model = genai.GenerativeModel('gemini-pro')
+    model = genai.GenerativeModel('gemini-1.5-flasho')
 else:
     st.error("⚠️ Gemini API Key not found. Please set it in Streamlit secrets.")
 
