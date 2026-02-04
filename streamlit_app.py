@@ -30,10 +30,15 @@ GEMINI_API_KEY = st.secrets.get("GEMINI_API_KEY", os.getenv("GEMINI_API_KEY", ""
 GMAIL_ADDRESS = st.secrets.get("GMAIL_ADDRESS", os.getenv("GMAIL_ADDRESS", ""))
 GMAIL_APP_PASSWORD = st.secrets.get("GMAIL_APP_PASSWORD", os.getenv("GMAIL_APP_PASSWORD", ""))
 
-# Configure Gemini
+# Configure Gemini with a specific stable version
 if GEMINI_API_KEY:
+    import google.generativeai.types as types
     genai.configure(api_key=GEMINI_API_KEY)
-    model = genai.GenerativeModel('models/gemini-1.5-flash')
+    
+    # This explicit model naming usually bypasses the v1beta 404 error
+    model = genai.GenerativeModel(
+        model_name='gemini-1.5-flash',
+    )
 else:
     st.error("⚠️ Gemini API Key not found. Please set it in Streamlit secrets.")
 
