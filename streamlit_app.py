@@ -2,8 +2,6 @@
 Field Service Scheduling System - Streamlit App
 100% Free Appointment System using Google Sheets, Gemini API, and Gmail
 """
-from google import genai
-from google.genai import types
 
 import streamlit as st
 from streamlit_gsheets import GSheetsConnection
