@@ -34,14 +34,10 @@ GMAIL_APP_PASSWORD = st.secrets.get("GMAIL_APP_PASSWORD", os.getenv("GMAIL_APP_P
 if GEMINI_API_KEY:
     genai.configure(api_key=GEMINI_API_KEY)
     
-    # We use a simple dictionary to avoid library 'type' errors
-    # 'low' is the most stable fast-speed setting
+    # We remove 'thinking_config' to stop the crash. 
+    # Gemini 3 Flash is already quite fast by default.
     model = genai.GenerativeModel(
-        model_name="gemini-3-flash-preview",
-        generation_config={
-            "thinking_config": {"thinking_level": "low"},
-            "temperature": 1.0  # Gemini 3 works best at 1.0
-        }
+        model_name="gemini-3-flash-preview"
     )
 else:
     st.error("⚠️ Gemini API Key not found.")
