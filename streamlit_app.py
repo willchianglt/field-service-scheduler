@@ -32,21 +32,20 @@ GMAIL_APP_PASSWORD = st.secrets.get("GMAIL_APP_PASSWORD", os.getenv("GMAIL_APP_P
 
 # Configure Gemini with a specific stable version
 if GEMINI_API_KEY:
-    import google.generativeai.types as types
     genai.configure(api_key=GEMINI_API_KEY)
     
-    # Speed up Gemini 3 Flash by reducing thinking depth
+    # Using a simple dictionary avoids "Unknown field" errors in the SDK
+    fast_config = {
+        "thinking_config": {"thinking_level": "minimal"}
+    }
+    
     model = genai.GenerativeModel(
         model_name="gemini-3-flash-preview",
-        generation_config={
-            "thinking_config": {
-                "thinking_level": "minimal"  # 'minimal' is fastest for Gemini 3 Flash
-            }
-        }
+        generation_config=fast_config
     )
 else:
-    st.error("⚠️ Gemini API Key not found. Please set it in Streamlit secrets.")
-
+    st.error("⚠️ Gemini API Key not found.")
+    
 # Column mapping based on your sheet structure
 COLUMNS = {
     'WORK_ORDER': 'Work_Order',
