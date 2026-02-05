@@ -34,15 +34,16 @@ GMAIL_APP_PASSWORD = st.secrets.get("GMAIL_APP_PASSWORD", os.getenv("GMAIL_APP_P
 
 # Configure Gemini with a specific stable version
 if GEMINI_API_KEY:
-    # Use the new Client instead of the old genai.configure
-    client = genai.Client(api_key=GEMINI_API_KEY)
+    genai.configure(api_key=GEMINI_API_KEY)
     
-    # We set the model and config here
-    MODEL_ID = "gemini-3-flash-preview"
-    config = types.GenerateContentConfig(
-        thinking_config=types.ThinkingConfig(
-            thinking_level="minimal"  # This is the fastest setting!
-        )
+    # We use a simple dictionary to avoid library 'type' errors
+    # 'low' is the most stable fast-speed setting
+    model = genai.GenerativeModel(
+        model_name="gemini-3-flash-preview",
+        generation_config={
+            "thinking_config": {"thinking_level": "low"},
+            "temperature": 1.0  # Gemini 3 works best at 1.0
+        }
     )
 else:
     st.error("⚠️ Gemini API Key not found.")
