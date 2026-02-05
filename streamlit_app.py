@@ -2,6 +2,8 @@
 Field Service Scheduling System - Streamlit App
 100% Free Appointment System using Google Sheets, Gemini API, and Gmail
 """
+from google import genai
+from google.genai import types
 
 import streamlit as st
 from streamlit_gsheets import GSheetsConnection
@@ -32,16 +34,15 @@ GMAIL_APP_PASSWORD = st.secrets.get("GMAIL_APP_PASSWORD", os.getenv("GMAIL_APP_P
 
 # Configure Gemini with a specific stable version
 if GEMINI_API_KEY:
-    genai.configure(api_key=GEMINI_API_KEY)
+    # Use the new Client instead of the old genai.configure
+    client = genai.Client(api_key=GEMINI_API_KEY)
     
-    # Using a simple dictionary avoids "Unknown field" errors in the SDK
-    fast_config = {
-        "thinking_config": {"thinking_level": "minimal"}
-    }
-    
-    model = genai.GenerativeModel(
-        model_name="gemini-3-flash-preview",
-        generation_config=fast_config
+    # We set the model and config here
+    MODEL_ID = "gemini-3-flash-preview"
+    config = types.GenerateContentConfig(
+        thinking_config=types.ThinkingConfig(
+            thinking_level="minimal"  # This is the fastest setting!
+        )
     )
 else:
     st.error("⚠️ Gemini API Key not found.")
