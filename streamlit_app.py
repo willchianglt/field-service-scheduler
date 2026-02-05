@@ -35,11 +35,13 @@ if GEMINI_API_KEY:
     import google.generativeai.types as types
     genai.configure(api_key=GEMINI_API_KEY)
     
-    # We add generation_config here to speed things up
+    # Speed up Gemini 3 Flash by reducing thinking depth
     model = genai.GenerativeModel(
         model_name="gemini-3-flash-preview",
         generation_config={
-            "thinking_config": {"thinking_level": "MINIMAL"}
+            "thinking_config": {
+                "thinking_level": "minimal"  # 'minimal' is fastest for Gemini 3 Flash
+            }
         }
     )
 else:
